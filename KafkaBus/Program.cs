@@ -21,7 +21,7 @@ namespace KafkaBus
                 while (stringValue != "-")
                 {
                     stringValue = Console.ReadLine();
-                    producer.ProduceAsync("workTopic", new Message<Null, string>() { Value = stringValue });
+                    producer.ProduceAsync("newKuba", new Message<Null, string>() { Value = stringValue });
                 }
                 producer.Flush(TimeSpan.FromSeconds(10));
             }

@@ -1,7 +1,7 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/notify",
+      "DownstreamPathTemplate": "/api/notify/notifyForUser",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,21 +9,32 @@
           "Port": 7001
         }
       ],
-      "UpstreamPathTemplate": "/api/n/{catchAll}"
+      "UpstreamPathTemplate": "/api/n/notify",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Rola": "User , Administrator"
+      }
     },
+
+
     {
-      "DownstreamPathTemplate": "/api/user",
+      "DownstreamPathTemplate": "/api/user/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7004
+          "Port": 7005
         }
       ],
-      "UpstreamPathTemplate": "/api/u/{catchAll}"
+      "UpstreamPathTemplate": "/api/u/{everything}"
     },
+
+
     {
-      "DownstreamPathTemplate": "/api/work",
+      "DownstreamPathTemplate": "/api/work/workForWorker",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -31,7 +42,14 @@
           "Port": 7002
         }
       ],
-      "UpstreamPathTemplate": "/api/w/{catchAll}"
+      "UpstreamPathTemplate": "/api/w/work",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Rola": "Worker , Administrator"
+      }
     }
   ],
   "GlobalConfiguration": {

@@ -5,8 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using GatewayApi.Models;
-using GatewayApi.Queries;
+using App.Core.ExternalConsumer;
+using Gateway.Shared.Commands;
+using Gateway.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,20 +22,25 @@ namespace GatewayApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly IExternalCommandProducer _producer;
 
-        public UsersController(IConfiguration configuration)
+        public UsersController(IConfiguration configuration, IExternalCommandProducer producer)
         {
             _configuration = configuration;
+            _producer = producer;
         }
 
-        [AllowAnonymous]
         [HttpPost]
-        [Route("authorize")]
-        public async Task<UserWithToken> Authorize([FromBody] AuthorizeUser query)
+        [AllowAnonymous]
+        [Route("authenticate")]
+        public async Task<ActionResult> Authenticate([FromBody] ValidUser command)
         {
-            //user authorize method
-            var user = new UserWithToken{Name = "JerzyDwa",Description = "JerzyEngel",Role = "User", Id = 10};
+            await _producer.Publish(command);
+            return Ok();
+        }
 
+        public string CreateToken(UserVm user)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var appSettingsSection = _configuration.GetSection("JWT");
             var secretKey = appSettingsSection.GetValue<string>("Secret");
@@ -44,25 +50,51 @@ namespace GatewayApi.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim("Rola", user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
-            return user;
+            return tokenHandler.WriteToken(token);
         }
 
-        [Authorize(Roles = "User")]
-        [HttpGet]
-        [Route("seedDbSettings")]
-        public async Task<IActionResult> SeedDbSettings()
+        private List<UserVm> Users = new List<UserVm>
         {
-            var connection = _configuration.GetConnectionString("Bwi");
-            //await StartupDataSeeder.SeedDataSettings(_configuration, connection);
-            return Ok();
+            new UserVm
+            {
+                Name = "jmrowca", Description = "Jakub Mrowca", CompanyName = "Abis", Email = "jmrowca@abis.krakow.pl",
+                Id = 1, Role = "Worker"
+            },
+            new UserVm
+            {
+                Name = "jengel", Description = "Jerzy Engel", CompanyName = "Engel solution", Email = "", Id = 2,
+                Role = "User"
+            },
+            new UserVm
+            {
+                Name = "admin", Description = "Administrator", CompanyName = "", Email = "", Id = 3,
+                Role = "Administrator"
+            },
+        };
+
+        public UserVm GetUser(string name)
+        {
+            return Users.Select(x => new UserVm
+            {
+                CompanyName = x.CompanyName,
+                Name = x.Name
+                ,
+                Description = x.Description,
+                Role = x.Role,
+                Email = x.Email,
+                Id = x.Id
+            }).FirstOrDefault(x => x.Name == name);
+        }
+
+        public List<UserVm> GetAll()
+        {
+            return Users;
         }
     }
 }

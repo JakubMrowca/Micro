@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NotificationApi.Controllers
@@ -12,10 +13,10 @@ namespace NotificationApi.Controllers
     {
         // GET api/values
         [HttpGet]
-        [Route("")]
+        [Route("notifyForUser")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return  new string[] { "notify", "api" };
+            return  new string[] { "notify for you:", "not notify :(" };
         }
 
         // GET api/values/5

@@ -22,7 +22,7 @@ namespace KafkaNotification
 
             using (var consumer = new ConsumerBuilder<string, string>(config).Build())
             {
-                consumer.Subscribe("workTopic");
+                consumer.Subscribe("newKuba");
                 try
                 {
                     while (true)

@@ -7,42 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WorkApi.Controllers
 {
-    [Authorize]
     [Route("api/work")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        [Authorize(Roles = "User")]
-        [HttpGet,Route("")]
+        [HttpGet,Route("workForWorker")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "work", "api" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "work";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return new string[] { "work for you:", "10h" };
         }
     }
 }

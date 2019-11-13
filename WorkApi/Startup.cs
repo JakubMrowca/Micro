@@ -31,38 +31,38 @@ namespace WorkApi
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // configure strongly typed settings objects
-            var appSettingsSection = Configuration.GetSection("JWT");
-            var secretKey = appSettingsSection.GetValue<string>("Secret");
+            //// configure strongly typed settings objects
+            //var appSettingsSection = Configuration.GetSection("JWT");
+            //var secretKey = appSettingsSection.GetValue<string>("Secret");
 
-            var key = Encoding.ASCII.GetBytes(secretKey);
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+            //var key = Encoding.ASCII.GetBytes(secretKey);
+            //services.AddAuthentication(x =>
+            //    {
+            //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    })
+            //    .AddJwtBearer(x =>
+            //    {
+            //        x.RequireHttpsMetadata = false;
+            //        x.SaveToken = true;
+            //        x.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuerSigningKey = true,
+            //            IssuerSigningKey = new SymmetricSecurityKey(key),
+            //            ValidateIssuer = false,
+            //            ValidateAudience = false
+            //        };
+            //    });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Administrator",
-                    policy => policy.RequireRole("Administrator"));
-                options.AddPolicy("User",
-                    policy => policy.RequireRole("User"));
-                options.AddPolicy("Guest",
-                    policy => policy.RequireRole("Guest"));
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("Administrator",
+            //        policy => policy.RequireRole("Administrator"));
+            //    options.AddPolicy("Worker",
+            //        policy => policy.RequireRole("Worker"));
+            //    options.AddPolicy("Guest",
+            //        policy => policy.RequireRole("Guest"));
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,7 +73,7 @@ namespace WorkApi
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseAuthentication();
+            //app.UseAuthentication();
 
             app.UseMvc();
         }
