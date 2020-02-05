@@ -26,7 +26,7 @@ namespace App.Core.ExternalConsumer.RabbitMq
 
         public async Task Publish(IExternalCommand command)
         {
-            var factory = new ConnectionFactory() { HostName = config.HostName };
+            var factory = new ConnectionFactory { HostName = config.HostName, UserName = "rabbitmq", Password = "rabbitmq" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {

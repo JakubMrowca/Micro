@@ -20,6 +20,7 @@
     },
 
 
+
     {
       "DownstreamPathTemplate": "/api/user/{everything}",
       "DownstreamScheme": "http",
@@ -33,6 +34,8 @@
     },
 
 
+
+
     {
       "DownstreamPathTemplate": "/api/work/workForWorker",
       "DownstreamScheme": "http",
@@ -40,9 +43,16 @@
         {
           "Host": "localhost",
           "Port": 7002
+        },
+        {
+          "Host": "192.168.52.1",
+          "Port": 80 
         }
       ],
       "UpstreamPathTemplate": "/api/w/work",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "ApiSecurity",
         "AllowedScopes": []

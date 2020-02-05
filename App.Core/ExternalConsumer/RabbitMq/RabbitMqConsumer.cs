@@ -41,7 +41,7 @@ namespace App.Core.ExternalConsumer.RabbitMq
         }
         private void InitRabbitMQ()
         {
-            var factory = new ConnectionFactory { HostName = config.HostName };
+            var factory = new ConnectionFactory { HostName = config.HostName,UserName = "rabbitmq", Password = "rabbitmq" };
 
             // create connection
             _connection = factory.CreateConnection();

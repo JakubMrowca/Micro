@@ -15,7 +15,7 @@ namespace WorkApi.Controllers
         [HttpGet,Route("workForWorker")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "work for you:", "10h" };
+            return new string[] { "work for you:", "11h" };
         }
     }
 }
